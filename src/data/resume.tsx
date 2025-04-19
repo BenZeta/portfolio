@@ -1,5 +1,5 @@
 import { Icons } from '@/components/icons';
-import { HomeIcon, NotebookIcon } from 'lucide-react';
+import { HomeIcon } from 'lucide-react';
 
 export const DATA = {
   name: 'Ben Adelio Alvaro Pardede',
@@ -18,26 +18,32 @@ export const DATA = {
     'TypeScript',
     'Tailwind CSS',
     'Redux',
+    'Socket.io',
     'Node.js',
     'Express.js',
     'PostgreSQL',
     'Prisma',
-    'Socket.io',
+    'MariaDB',
+    'MySQL',
+    'MongoDB',
+    'Redis',
+    'Firebase',
+    'Supabase',
+    'Cloudinary',
+    'Cloudflare',
+    'AWS',
     'REST API',
     'Go',
     'Docker',
   ],
-  navbar: [
-    { href: '/', icon: HomeIcon, label: 'Home' },
-    { href: '/blog', icon: NotebookIcon, label: 'Blog' },
-  ],
+  navbar: [{ href: '/', icon: HomeIcon, label: 'Home' }],
   contact: {
     email: 'benpardede3@gmail.com',
     tel: '+62 822-4901-3283',
     social: {
       GitHub: {
         name: 'GitHub',
-        url: '#',
+        url: 'https://github.com/BenZeta',
         icon: Icons.github,
         navbar: true,
       },
@@ -47,23 +53,17 @@ export const DATA = {
         icon: Icons.linkedin,
         navbar: true,
       },
-      X: {
-        name: 'X',
-        url: '#',
-        icon: Icons.x,
-        navbar: true,
-      },
-      Youtube: {
-        name: 'Youtube',
-        url: '#',
-        icon: Icons.youtube,
-        navbar: true,
-      },
       email: {
         name: 'Send Email',
-        url: '#',
+        url: 'mailto:benpardede3@gmail.com',
         icon: Icons.email,
         navbar: false,
+      },
+      whatsapp: {
+        name: 'WhatsApp',
+        url: 'https://wa.me/6282249013283',
+        icon: Icons.whatsapp,
+        navbar: true,
       },
     },
   },
@@ -102,7 +102,7 @@ export const DATA = {
     {
       title: 'SamaKita',
       href: 'https://next-ai-samakita.vercel.app/',
-      dates: '2024',
+      dates: '2025',
       active: true,
       description:
         'A comprehensive Content Management System (CMS) designed specifically for managing share houses in Indonesia. Empowers property owners to efficiently oversee their properties, track financial expenses, and manage tenant-related activities. Serves both B2B and B2C markets by offering robust features for property owners and seamless service tracking for tenants.',
@@ -138,11 +138,11 @@ export const DATA = {
       technologies: [
         'Prisma',
         'TypeScript',
+        'Socket.io',
         'Tailwind',
         'ReactJS',
         'Vite',
         'Redux',
-        'Socket.io',
       ],
       links: [
         {
@@ -175,7 +175,7 @@ export const DATA = {
     {
       title: 'Portfolio Website',
       href: 'https://benpardede.vercel.app/',
-      dates: '2024',
+      dates: '2025',
       active: true,
       description:
         'A personal portfolio website showcasing my development skills, projects, and achievements.',
