@@ -9,6 +9,7 @@ import {
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo } from 'react';
 import Markdown from 'react-markdown';
 
 interface Props {
@@ -28,7 +29,7 @@ interface Props {
   className?: string;
 }
 
-export function ProjectCard({
+export const ProjectCard = memo(function ProjectCard({
   title,
   href,
   description,
@@ -43,7 +44,7 @@ export function ProjectCard({
   return (
     <Card
       className={cn(
-        'flex flex-col overflow-hidden border hover:shadow-lg transition-all duration-300 ease-out h-full',
+        'flex flex-col overflow-hidden border transition-all duration-300 ease-out h-full will-change-transform',
         className
       )}
     >
@@ -56,7 +57,9 @@ export function ProjectCard({
               loop
               muted
               playsInline
-              className="pointer-events-none mx-auto h-40 w-full object-cover object-top" // needed because random black line at bottom of video
+              preload="auto"
+              className="pointer-events-none mx-auto h-40 w-full object-cover object-top"
+              style={{ transform: 'translateZ(0)' }}
             />
           )}
           {image && (
@@ -65,7 +68,11 @@ export function ProjectCard({
               alt={title}
               width={500}
               height={300}
+              priority
+              sizes="(max-width: 768px) 280px, 350px"
+              quality={75}
               className="h-40 w-full overflow-hidden object-cover object-top"
+              style={{ transform: 'translateZ(0)' }}
             />
           )}
         </Link>
@@ -90,7 +97,7 @@ export function ProjectCard({
         <CardContent className="px-2 flex-shrink-0 pt-0">
           {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
-              {tags?.map((tag) => (
+              {tags?.slice(0, 6).map((tag) => (
                 <Badge
                   className="px-1 py-0 text-[10px]"
                   variant="secondary"
@@ -120,4 +127,9 @@ export function ProjectCard({
       </div>
     </Card>
   );
+});
+
+// For backwards compatibility
+export function ProjectCardComponent(props: Props) {
+  return <ProjectCard {...props} />;
 }

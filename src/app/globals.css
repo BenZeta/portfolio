@@ -75,6 +75,45 @@
   }
 }
 
+/* Carousel Auto-scroll Animation */
+@keyframes carousel-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.carousel-container {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: relative;
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.auto-scroll {
+  animation: carousel-scroll 30s linear infinite;
+  animation-play-state: running;
+  scroll-behavior: auto !important;
+}
+
+.auto-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Support for hardware acceleration */
+.will-change-transform {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 h3 code {
   @apply !text-lg md:!text-xl;
 }

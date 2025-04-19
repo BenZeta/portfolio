@@ -9,82 +9,45 @@ import { TypingAnimation } from '@/components/typing-animation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DATA } from '@/data/resume';
 import Link from 'next/link';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const [isCarouselVisible, setIsCarouselVisible] = useState(false);
 
+  // Use IntersectionObserver to only animate when visible
+  useEffect(() => {
+    if (!carouselRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsCarouselVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(carouselRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Add pause/resume functionality with mouse events
   useEffect(() => {
     const scrollContainer = carouselRef.current;
     if (!scrollContainer) return;
 
-    let scrollAmount = 0.5; // Slower scrolling for smoother motion
-    let isPaused = false;
-    let animationId: number;
-
-    const scroll = () => {
-      if (!scrollContainer || isPaused) return;
-
-      scrollContainer.scrollLeft += scrollAmount;
-
-      // If we reach the end, reset to the beginning with a smooth transition
-      if (
-        scrollContainer.scrollLeft >=
-        scrollContainer.scrollWidth - scrollContainer.clientWidth
-      ) {
-        // Set a flag to avoid multiple resets at once
-        isPaused = true;
-
-        // Create a smooth transition back to start
-        const startPosition = scrollContainer.scrollLeft;
-        const duration = 1000; // 1 second transition
-        const startTime = performance.now();
-
-        const smoothReset = (currentTime: number) => {
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          // Easing function for smooth deceleration
-          const easeOut = 1 - Math.pow(1 - progress, 3);
-
-          scrollContainer.scrollLeft = startPosition - startPosition * easeOut;
-
-          if (progress < 1) {
-            requestAnimationFrame(smoothReset);
-          } else {
-            // Resume normal scrolling
-            isPaused = false;
-            animationId = requestAnimationFrame(scroll);
-          }
-        };
-
-        requestAnimationFrame(smoothReset);
-        return;
-      }
-
-      animationId = requestAnimationFrame(scroll);
-    };
-
-    // Start scrolling
-    animationId = requestAnimationFrame(scroll);
-
-    // Pause scrolling when hovering
-    const handleMouseEnter = () => {
-      isPaused = true;
-    };
-
-    const handleMouseLeave = () => {
-      isPaused = false;
-      animationId = requestAnimationFrame(scroll);
-    };
+    const handleMouseEnter = () => setIsCarouselPaused(true);
+    const handleMouseLeave = () => setIsCarouselPaused(false);
 
     scrollContainer.addEventListener('mouseenter', handleMouseEnter);
     scrollContainer.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      cancelAnimationFrame(animationId);
       scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
       scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
     };
@@ -187,11 +150,13 @@ export default function Page() {
           <div className="relative w-full overflow-hidden">
             <div
               ref={carouselRef}
-              className="flex gap-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-6 no-scrollbar"
+              className={`carousel-container flex gap-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-6 no-scrollbar ${
+                isCarouselVisible && !isCarouselPaused ? 'auto-scroll' : ''
+              } will-change-transform`}
               style={{
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
-                scrollBehavior: 'smooth',
+                WebkitOverflowScrolling: 'touch',
               }}
             >
               {/* Add extra spacing at beginning */}
@@ -202,22 +167,20 @@ export default function Page() {
                   key={project.title}
                   className="shrink-0 snap-center w-[280px] md:w-[350px]"
                 >
-                  <BlurFade delay={BLUR_FADE_DELAY * 12 + id * 0.05}>
-                    <div className="h-[240px] md:h-[420px] flex flex-col">
-                      <ProjectCard
-                        href={project.href}
-                        key={project.title}
-                        title={project.title}
-                        description={project.description}
-                        dates={project.dates}
-                        tags={project.technologies}
-                        image={project.image}
-                        video={project.video}
-                        links={project.links}
-                        className="flex-1 flex flex-col h-full"
-                      />
-                    </div>
-                  </BlurFade>
+                  <div className="h-[240px] md:h-[420px] flex flex-col">
+                    <ProjectCard
+                      href={project.href}
+                      key={project.title}
+                      title={project.title}
+                      description={project.description}
+                      dates={project.dates}
+                      tags={project.technologies}
+                      image={project.image}
+                      video={project.video}
+                      links={project.links}
+                      className="flex-1 flex flex-col h-full"
+                    />
+                  </div>
                 </div>
               ))}
 
